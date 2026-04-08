@@ -1,0 +1,122 @@
+.cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    color var(--transition),
+    transform 120ms ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cell:hover:not(.start):not(.end):not(.inRange) {
+  background: var(--accent-light);
+  color: var(--accent-dark);
+  transform: scale(1.08);
+}
+
+.cell:active {
+  transform: scale(0.95);
+}
+
+.number {
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* ── Other month days ─────────────────────── */
+.other .number {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.other:hover {
+  background: #f3f4f6 !important;
+  color: var(--text-secondary) !important;
+}
+
+/* ── Today ────────────────────────────────── */
+.today {
+  background: var(--accent-light);
+}
+
+.today .number {
+  color: var(--accent-dark);
+  font-weight: 700;
+}
+
+/* ── Weekend ──────────────────────────────── */
+.weekend .number {
+  color: var(--accent);
+}
+
+/* ── Range start ──────────────────────────── */
+.start {
+  background: var(--accent) !important;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.start .number {
+  color: #fff !important;
+  font-weight: 700;
+}
+
+/* ── Range end ────────────────────────────── */
+.end {
+  background: var(--accent) !important;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.end .number {
+  color: #fff !important;
+  font-weight: 700;
+}
+
+/* ── In range ─────────────────────────────── */
+.inRange {
+  background: var(--range-bg);
+  border-radius: 0;
+}
+
+.inRange .number {
+  color: var(--accent-dark);
+  font-weight: 500;
+}
+
+/* ── Hover preview while selecting ───────── */
+.hovered {
+  background: var(--accent-mid) !important;
+  border-radius: 50%;
+}
+
+.hovered .number {
+  color: #fff !important;
+}
+
+/* ── Holiday dot ──────────────────────────── */
+.holidayDot {
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+  pointer-events: none;
+}
+
+.start .holidayDot,
+.end .holidayDot {
+  background: rgba(255, 255, 255, 0.8);
+}

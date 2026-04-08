@@ -1,0 +1,130 @@
+/* ── Root wrapper ─────────────────────────── */
+.root {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: radial-gradient(ellipse at 30% 20%, var(--accent-light) 0%, var(--bg) 60%);
+  transition: background 0.5s ease;
+}
+
+/* ── Card ─────────────────────────────────── */
+.card {
+  display: flex;
+  width: 100%;
+  max-width: 860px;
+  min-height: 560px;
+  background: var(--card-bg);
+  border-radius: var(--r-xl);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Left panel ───────────────────────────── */
+.leftPanel {
+  display: flex;
+  flex-direction: column;
+  width: 280px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  background: #fafafa;
+}
+
+.notesWrap {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ── Right panel ──────────────────────────── */
+.rightPanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.gridContainer {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Legend ───────────────────────────────── */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.legendDot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ════════════════════════════════════════════
+   RESPONSIVE — Tablet
+   ════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .root {
+    padding: 16px 12px;
+    align-items: flex-start;
+  }
+
+  .card {
+    flex-direction: column;
+    min-height: auto;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .leftPanel {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    background: var(--card-bg);
+  }
+
+  .notesWrap {
+    overflow-y: visible;
+  }
+}
+
+/* ════════════════════════════════════════════
+   RESPONSIVE — Mobile
+   ════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .root {
+    padding: 0;
+    align-items: stretch;
+    background: var(--bg);
+  }
+
+  .card {
+    border-radius: 0;
+    box-shadow: none;
+    max-width: 100%;
+    min-height: 100vh;
+  }
+
+  .legend {
+    gap: 10px;
+  }
+}
