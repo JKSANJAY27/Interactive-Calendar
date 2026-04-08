@@ -1,49 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&display=swap');
+
+/* ============================================
+   DESIGN TOKENS
+   ============================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Base */
+  --bg: #f0f2f5;
+  --card-bg: #ffffff;
+  --card-shadow: 0 20px 60px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08);
+  --border: #e8eaed;
+
+  /* Typography */
+  --text-primary: #1a1d23;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+
+  /* Month themes — overridden per month */
+  --accent: #2563eb;
+  --accent-light: #dbeafe;
+  --accent-mid: #93c5fd;
+  --accent-dark: #1d4ed8;
+
+  /* Range selection */
+  --range-bg: #eff6ff;
+  --range-start: #2563eb;
+  --range-end: #2563eb;
+
+  /* Radius */
+  --r-sm: 6px;
+  --r-md: 12px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+
+  /* Transitions */
+  --transition: 200ms ease;
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Month-specific themes */
+[data-month="0"]  { --accent:#1a7f64; --accent-light:#d1fae5; --accent-mid:#6ee7b7; --accent-dark:#065f46; --range-bg:#ecfdf5; }
+[data-month="1"]  { --accent:#7c3aed; --accent-light:#ede9fe; --accent-mid:#c4b5fd; --accent-dark:#5b21b6; --range-bg:#f5f3ff; }
+[data-month="2"]  { --accent:#d97706; --accent-light:#fef3c7; --accent-mid:#fcd34d; --accent-dark:#b45309; --range-bg:#fffbeb; }
+[data-month="3"]  { --accent:#059669; --accent-light:#d1fae5; --accent-mid:#6ee7b7; --accent-dark:#065f46; --range-bg:#ecfdf5; }
+[data-month="4"]  { --accent:#e11d48; --accent-light:#ffe4e6; --accent-mid:#fda4af; --accent-dark:#9f1239; --range-bg:#fff1f2; }
+[data-month="5"]  { --accent:#0284c7; --accent-light:#e0f2fe; --accent-mid:#7dd3fc; --accent-dark:#075985; --range-bg:#f0f9ff; }
+[data-month="6"]  { --accent:#7c3aed; --accent-light:#ede9fe; --accent-mid:#c4b5fd; --accent-dark:#5b21b6; --range-bg:#f5f3ff; }
+[data-month="7"]  { --accent:#ea580c; --accent-light:#ffedd5; --accent-mid:#fdba74; --accent-dark:#9a3412; --range-bg:#fff7ed; }
+[data-month="8"]  { --accent:#0891b2; --accent-light:#cffafe; --accent-mid:#67e8f9; --accent-dark:#164e63; --range-bg:#ecfeff; }
+[data-month="9"]  { --accent:#d97706; --accent-light:#fef3c7; --accent-mid:#fcd34d; --accent-dark:#b45309; --range-bg:#fffbeb; }
+[data-month="10"] { --accent:#b45309; --accent-light:#fef3c7; --accent-mid:#fcd34d; --accent-dark:#92400e; --range-bg:#fffbeb; }
+[data-month="11"] { --accent:#dc2626; --accent-light:#fee2e2; --accent-mid:#fca5a5; --accent-dark:#991b1b; --range-bg:#fef2f2; }
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html {
-  height: 100%;
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  box-sizing: border-box;
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
   padding: 0;
-  margin: 0;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+textarea {
+  font-family: inherit;
+  resize: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+input {
+  font-family: inherit;
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }
