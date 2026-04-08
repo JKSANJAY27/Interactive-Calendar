@@ -14,7 +14,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      {/* suppressHydrationWarning prevents noise from browser extensions (Grammarly etc.) */}
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

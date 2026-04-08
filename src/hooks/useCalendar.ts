@@ -67,7 +67,14 @@ export function useCalendar() {
         setRange({ start: null, end: null });
         setSelState("idle");
       } else {
-        setRange((prev) => ({ ...prev, end: date }));
+        // normalize: always keep earlier date as start
+        setRange((prev) => {
+          if (!prev.start) return prev;
+          const isBackwards = date < prev.start;
+          return isBackwards
+            ? { start: date, end: prev.start }
+            : { start: prev.start, end: date };
+        });
         setSelState("idle");
         setHoverDate(null);
       }
