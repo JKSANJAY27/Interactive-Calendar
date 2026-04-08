@@ -25,9 +25,14 @@ function isInRange(date: Date, start: Date, end: Date) {
 }
 
 export function useCalendar() {
-  const now = new Date();
-  const [viewYear, setViewYear] = useState(now.getFullYear());
-  const [viewMonth, setViewMonth] = useState(now.getMonth());
+  // Capture today once — avoids hydration mismatch between server/client
+  const [today] = useState<Date>(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  });
+  const [viewYear, setViewYear] = useState(today.getFullYear());
+  const [viewMonth, setViewMonth] = useState(today.getMonth());
   const [range, setRange] = useState<DateRange>({ start: null, end: null });
   const [hoverDate, setHoverDate] = useState<Date | null>(null);
   const [selState, setSelState] = useState<SelectionState>("idle");
@@ -47,9 +52,9 @@ export function useCalendar() {
   }, []);
 
   const goToday = useCallback(() => {
-    setViewYear(now.getFullYear());
-    setViewMonth(now.getMonth());
-  }, []);
+    setViewYear(today.getFullYear());
+    setViewMonth(today.getMonth());
+  }, [today]);
 
   const handleDayClick = useCallback((date: Date) => {
     if (selState === "idle") {
@@ -79,7 +84,7 @@ export function useCalendar() {
     (date: Date) => {
       const { start, end } = range;
 
-      const isToday = isSameDay(date, now);
+      const isToday = isSameDay(date, today);
 
       if (!start) return { isToday, isStart: false, isEnd: false, inRange: false, isHover: false };
 
@@ -97,7 +102,7 @@ export function useCalendar() {
 
       return { isToday, isStart, isEnd, inRange, isHover };
     },
-    [range, hoverDate, selState, now]
+    [range, hoverDate, selState, today]
   );
 
   // Build the grid: 6 rows × 7 cols, week starts Monday
@@ -153,6 +158,6 @@ export function useCalendar() {
     getDayState,
     buildGrid,
     selectedDaysCount,
-    today: now,
+    today,
   };
 }

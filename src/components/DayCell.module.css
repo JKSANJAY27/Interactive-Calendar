@@ -5,20 +5,26 @@
   align-items: center;
   justify-content: center;
   aspect-ratio: 1;
-  border-radius: 50%;
   cursor: pointer;
   transition:
-    background var(--transition),
     color var(--transition),
     transform 120ms ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-.cell:hover:not(.start):not(.end):not(.inRange) {
-  background: var(--accent-light);
+/* The visible circle sits on top via z-index; background strips go behind */
+.cell:hover:not(.start):not(.end):not(.inRange) .number {
   color: var(--accent-dark);
-  transform: scale(1.08);
+}
+
+.cell:hover:not(.start):not(.end):not(.inRange)::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  background: var(--accent-light);
+  border-radius: 50%;
+  z-index: 0;
 }
 
 .cell:active {
@@ -26,10 +32,12 @@
 }
 
 .number {
+  position: relative;
   font-size: 0.82rem;
   font-weight: 500;
   line-height: 1;
   pointer-events: none;
+  z-index: 2;
 }
 
 /* ── Other month days ─────────────────────── */
@@ -38,14 +46,18 @@
   font-weight: 400;
 }
 
-.other:hover {
+.other:hover::before {
   background: #f3f4f6 !important;
-  color: var(--text-secondary) !important;
 }
 
 /* ── Today ────────────────────────────────── */
-.today {
+.today::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
   background: var(--accent-light);
+  border-radius: 50%;
+  z-index: 0;
 }
 
 .today .number {
@@ -58,11 +70,34 @@
   color: var(--accent);
 }
 
+/* ═══════════════════════════════════════════
+   RANGE SELECTION — visual system
+   
+   Each cell uses two layers:
+   1. ::before  — the colored background strip (full-width for inRange,
+                  right-half for start, left-half for end)
+   2. ::after   — the filled circle on top of the strip (for start/end)
+═══════════════════════════════════════════ */
+
 /* ── Range start ──────────────────────────── */
-.start {
-  background: var(--accent) !important;
+.start::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background: var(--range-bg);
+  z-index: 0;
+}
+
+.start::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  background: var(--accent);
   border-radius: 50%;
-  z-index: 2;
+  z-index: 1;
 }
 
 .start .number {
@@ -71,10 +106,24 @@
 }
 
 /* ── Range end ────────────────────────────── */
-.end {
-  background: var(--accent) !important;
+.end::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: var(--range-bg);
+  z-index: 0;
+}
+
+.end::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  background: var(--accent);
   border-radius: 50%;
-  z-index: 2;
+  z-index: 1;
 }
 
 .end .number {
@@ -82,10 +131,18 @@
   font-weight: 700;
 }
 
+/* ── When start and end are the same day ── */
+.start.end::before {
+  display: none;
+}
+
 /* ── In range ─────────────────────────────── */
-.inRange {
+.inRange::before {
+  content: "";
+  position: absolute;
+  inset: 0;
   background: var(--range-bg);
-  border-radius: 0;
+  z-index: 0;
 }
 
 .inRange .number {
@@ -93,10 +150,18 @@
   font-weight: 500;
 }
 
+.inRange:hover::before {
+  background: var(--accent-light);
+}
+
 /* ── Hover preview while selecting ───────── */
-.hovered {
-  background: var(--accent-mid) !important;
+.hovered::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  background: var(--accent-mid);
   border-radius: 50%;
+  z-index: 1;
 }
 
 .hovered .number {
@@ -106,7 +171,7 @@
 /* ── Holiday dot ──────────────────────────── */
 .holidayDot {
   position: absolute;
-  bottom: 3px;
+  bottom: 4px;
   left: 50%;
   transform: translateX(-50%);
   width: 4px;
@@ -114,9 +179,10 @@
   border-radius: 50%;
   background: var(--accent);
   pointer-events: none;
+  z-index: 3;
 }
 
 .start .holidayDot,
 .end .holidayDot {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
 }
