@@ -4,6 +4,8 @@ export type Note = {
   id: string;
   text: string;
   rangeLabel: string;
+  startDate: string | null; // ISO date string — null for general month notes
+  endDate: string | null;   // ISO date string
   createdAt: string;
 };
 
@@ -15,7 +17,6 @@ export function useNotes(year: number, month: number) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [draft, setDraft] = useState("");
 
-  // Load from localStorage when month changes
   useEffect(() => {
     try {
       const raw = localStorage.getItem(storageKey(year, month));
@@ -39,12 +40,19 @@ export function useNotes(year: number, month: number) {
   );
 
   const addNote = useCallback(
-    (text: string, rangeLabel: string) => {
+    (
+      text: string,
+      rangeLabel: string,
+      startDate: Date | null,
+      endDate: Date | null
+    ) => {
       if (!text.trim()) return;
       const note: Note = {
         id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
         text: text.trim(),
         rangeLabel,
+        startDate: startDate ? startDate.toISOString() : null,
+        endDate: endDate ? endDate.toISOString() : null,
         createdAt: new Date().toISOString(),
       };
       persist([...notes, note]);

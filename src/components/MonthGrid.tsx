@@ -18,6 +18,7 @@ type Props = {
   };
   onDayClick: (d: Date) => void;
   onDayHover: (d: Date | null) => void;
+  getNoteCount: (d: Date) => number;
 };
 
 export default function MonthGrid({
@@ -27,6 +28,7 @@ export default function MonthGrid({
   getDayState,
   onDayClick,
   onDayHover,
+  getNoteCount,
 }: Props) {
   return (
     <div className={styles.grid}>
@@ -51,6 +53,7 @@ export default function MonthGrid({
             inRange={state.inRange}
             isHover={state.isHover}
             selState={selState}
+            noteCount={isCurrentMonth ? getNoteCount(date) : 0}
             onClick={() => onDayClick(date)}
             onMouseEnter={() => onDayHover(date)}
             onMouseLeave={() => onDayHover(null)}

@@ -171,7 +171,7 @@
 /* ── Holiday dot ──────────────────────────── */
 .holidayDot {
   position: absolute;
-  bottom: 4px;
+  bottom: 11px; /* sits above the note bars */
   left: 50%;
   transform: translateX(-50%);
   width: 4px;
@@ -185,4 +185,45 @@
 .start .holidayDot,
 .end .holidayDot {
   background: rgba(255, 255, 255, 0.85);
+}
+
+/* ── Note event bars (Google Calendar style) ── */
+.noteBars {
+  position: absolute;
+  bottom: 3px;
+  left: 6%;
+  right: 6%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.noteBar {
+  display: block;
+  height: 2.5px;
+  width: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+  opacity: 0.85;
+}
+
+/* on range endpoints, bars use white to stay readable over dark bg */
+.start .noteBar,
+.end .noteBar {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.moreCount {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+  line-height: 1;
+  text-align: right;
+}
+
+.start .moreCount,
+.end .moreCount {
+  color: rgba(255, 255, 255, 0.9);
 }

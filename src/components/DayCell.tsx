@@ -12,6 +12,7 @@ type Props = {
   inRange: boolean;
   isHover: boolean;
   selState: "idle" | "selecting";
+  noteCount: number;
   onClick: () => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
@@ -26,6 +27,7 @@ export default function DayCell({
   inRange,
   isHover,
   selState,
+  noteCount,
   onClick,
   onMouseEnter,
   onMouseLeave,
@@ -33,10 +35,12 @@ export default function DayCell({
   const day = date.getDate();
   const holiday = getHoliday(date);
 
-  const isWeekend =
-    date.getDay() === 0 || date.getDay() === 6;
-
+  const isWeekend = date.getDay() === 0 || date.getDay() === 6;
   const isEndpoint = isStart || isEnd;
+
+  // Up to 3 note bars visible, like Google Calendar events
+  const visibleBars = Math.min(noteCount, 3);
+  const hasMore = noteCount > 3;
 
   return (
     <button
@@ -63,6 +67,16 @@ export default function DayCell({
       {/* Holiday dot */}
       {holiday && isCurrentMonth && (
         <span className={styles.holidayDot} title={holiday} />
+      )}
+
+      {/* Note event bars — like Google Calendar */}
+      {noteCount > 0 && isCurrentMonth && (
+        <div className={styles.noteBars}>
+          {Array.from({ length: visibleBars }).map((_, i) => (
+            <span key={i} className={styles.noteBar} />
+          ))}
+          {hasMore && <span className={styles.moreCount}>+{noteCount - 3}</span>}
+        </div>
       )}
     </button>
   );

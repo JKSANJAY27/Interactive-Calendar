@@ -10,7 +10,7 @@ type Props = {
   notes: Note[];
   draft: string;
   setDraft: (v: string) => void;
-  onAdd: (text: string, rangeLabel: string) => void;
+  onAdd: (text: string, rangeLabel: string, start: Date | null, end: Date | null) => void;
   onDelete: (id: string) => void;
   onEdit: (id: string, text: string) => void;
   range: DateRange;
@@ -44,7 +44,7 @@ export default function NotesPanel({
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (draft.trim()) {
-      onAdd(draft, rangeLabel);
+      onAdd(draft, rangeLabel, range.start, range.end);
     }
   }
 
