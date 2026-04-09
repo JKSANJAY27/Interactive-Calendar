@@ -13,7 +13,6 @@ export const HOLIDAYS: Record<string, string> = {
   "08-15": "Independence Day",
   "08-27": "Janmashtami",
   "10-02": "Gandhi Jayanti",
-  "10-02": "Gandhi Jayanti",
   "10-24": "Dussehra",
   "11-01": "Diwali",
   "11-15": "Guru Nanak Jayanti",
