@@ -50,6 +50,8 @@
   flex: 1;
   overflow: hidden;
   position: relative;
+  perspective: 1100px;
+  perspective-origin: top center;
 }
 
 /* ── Legend ───────────────────────────────── */

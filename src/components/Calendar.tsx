@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import HeroImage from "./HeroImage";
 import CalendarHeader from "./CalendarHeader";
@@ -13,20 +13,29 @@ import styles from "./Calendar.module.css";
 
 type Direction = 1 | -1;
 
-const variants = {
+// 3D desk-calendar page flip
+// Pages flip around the TOP edge (the binder/spine), like a real table calendar
+const flipVariants = {
   enter: (dir: Direction) => ({
-    x: dir > 0 ? 60 : -60,
+    rotateX: dir > 0 ? 72 : -72,
     opacity: 0,
+    scale: 0.94,
   }),
   center: {
-    x: 0,
+    rotateX: 0,
     opacity: 1,
+    scale: 1,
   },
   exit: (dir: Direction) => ({
-    x: dir > 0 ? -60 : 60,
+    rotateX: dir > 0 ? -72 : 72,
     opacity: 0,
+    scale: 0.94,
   }),
 };
+
+function toDateKey(d: Date) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
 
 export default function Calendar() {
   const cal = useCalendar();
@@ -47,13 +56,34 @@ export default function Calendar() {
     cal.goPrevMonth();
   }, [cal]);
 
+  // Build a map: "YYYY-MM-DD" → number of notes covering that date
+  const notesCountMap = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const note of notes.notes) {
+      if (!note.startDate) continue;
+      const start = new Date(note.startDate);
+      const end = note.endDate ? new Date(note.endDate) : new Date(note.startDate);
+      start.setHours(0, 0, 0, 0);
+      end.setHours(0, 0, 0, 0);
+      const cursor = new Date(start);
+      while (cursor <= end) {
+        const key = toDateKey(cursor);
+        map.set(key, (map.get(key) ?? 0) + 1);
+        cursor.setDate(cursor.getDate() + 1);
+      }
+    }
+    return map;
+  }, [notes.notes]);
+
+  const getNoteCount = useCallback(
+    (date: Date) => notesCountMap.get(toDateKey(date)) ?? 0,
+    [notesCountMap]
+  );
+
   const cells = cal.buildGrid();
 
   return (
-    <div
-      className={styles.root}
-      data-month={cal.viewMonth}
-    >
+    <div className={styles.root} data-month={cal.viewMonth}>
       <div className={styles.card}>
         {/* ── Left panel: Hero image + Notes ── */}
         <aside className={styles.leftPanel}>
@@ -100,17 +130,21 @@ export default function Calendar() {
             )}
           </AnimatePresence>
 
-          {/* Animated month grid */}
+          {/* 3D flipping month grid */}
           <div className={styles.gridContainer}>
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={animKey}
                 custom={direction}
-                variants={variants}
+                variants={flipVariants}
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.22, ease: "easeInOut" }}
+                transition={{
+                  duration: 0.38,
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                }}
+                style={{ transformOrigin: "top center" }}
               >
                 <MonthGrid
                   cells={cells}
@@ -119,6 +153,7 @@ export default function Calendar() {
                   getDayState={cal.getDayState}
                   onDayClick={cal.handleDayClick}
                   onDayHover={cal.setHoverDate}
+                  getNoteCount={getNoteCount}
                 />
               </motion.div>
             </AnimatePresence>
@@ -141,6 +176,10 @@ export default function Calendar() {
             <span className={styles.legendItem}>
               <span className={styles.legendDot} style={{ background: "var(--accent)", borderRadius: "50%", width: "6px", height: "6px" }} />
               Holiday
+            </span>
+            <span className={styles.legendItem}>
+              <span className={styles.legendDot} style={{ background: "var(--accent)", borderRadius: "2px", width: "14px", height: "4px" }} />
+              Note
             </span>
           </div>
         </main>
